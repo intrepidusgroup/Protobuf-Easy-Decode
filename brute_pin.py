@@ -6,6 +6,7 @@ import hashlib
 import struct
 
 """
+Author: Rajendra Umadas
 
 The following code is a prototype. If you want to generically decode
 protobuf data, use the protobuf_easy_decode module in this directory.
@@ -20,6 +21,7 @@ class data and the way protobuf is designed to serialize data.
 To decode specific parts of the Google Wallet proto buf encoded data
  it was required to understand the ".proto" for Google Wallet. " This 
 was derived by reverse engineering the Google Wallet application. 
+
 
 """
 
