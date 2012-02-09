@@ -8,6 +8,10 @@ import struct
 """
 Author: Rajendra Umadas
 
+This script will brute force a Google Wallet PIN. You must feed it
+the protobuf data from your Google Wallet application on your Android
+device.
+
 The following code is a prototype. If you want to generically decode
 protobuf data, use the protobuf_easy_decode module in this directory.
 
