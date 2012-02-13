@@ -69,7 +69,6 @@ class ProtobufEasyDecode:
         new_pos = pos + length
         return buf[pos:new_pos],new_pos
     
-   
     def decode_raw_message(self,message, deep = False):
         alls_good = True
         pos = 0
@@ -80,22 +79,29 @@ class ProtobufEasyDecode:
                 current_tag_id,current_tag_type = \
                            self.decode_tag_header(current_tag_header)
             except:
+                #could not extract a correct tag header
                 current_tag_type= -1
                 pos = len(message)
-           #XXX: Need to catch exception for bad formats due to deep decode 
-            if current_tag_type == WIRETYPE.LENGTHDELIM:
-                data,pos = self.decode_lengthdelim(message,pos)
-                if deep:
-                    old_data = data
-                    data = (old_data,self.decode_raw_message(data,True))
-            elif current_tag_type == WIRETYPE.VARINT:
-                data,pos = self.decode_varint(message,pos)
-            elif current_tag_type == WIRETYPE.FIXED_64:
-                data,pos = self.decode_fixed_64(message,pos)
-            elif current_tag_type == WIRETYPE.FIXED_32:
-                data,pos = self.decode_fixed_32(message,pos)
-            else:
-                data = "ERR"
+            try:
+                if current_tag_type == WIRETYPE.LENGTHDELIM:
+                    data,pos = self.decode_lengthdelim(message,pos)
+                    if deep:
+                        old_data = data
+                        data = (old_data,self.decode_raw_message(data,True))
+                elif current_tag_type == WIRETYPE.VARINT:
+                    data,pos = self.decode_varint(message,pos)
+                elif current_tag_type == WIRETYPE.FIXED_64:
+                    data,pos = self.decode_fixed_64(message,pos)
+                elif current_tag_type == WIRETYPE.FIXED_32:
+                    data,pos = self.decode_fixed_32(message,pos)
+                else:
+                    #did not get a valid tag_type
+                    data = "ERR"
+                    pos = len(message)
+                    alls_good = False
+            except:
+                #got a valid tag_type but parsing failed
+                data = "Err"
                 pos = len(message)
                 alls_good = False
             temp_proto[current_tag_id] = (current_tag_type,data)
@@ -128,4 +134,6 @@ if __name__ == "__main__":
     x.get_decoded_raw_message() 
     x.get_decoded_raw_message_deep()
     x.pretty_print_decoded_message_deep()
-    x.pretty_print_decoded_message()
+    x.pretty_print_decoded_message(
+
+)
