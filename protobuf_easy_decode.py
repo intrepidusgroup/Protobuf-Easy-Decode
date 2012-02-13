@@ -79,6 +79,10 @@ class ProtobufEasyDecode:
                 data,pos = self.decode_lengthdelim(message,pos)
             elif current_tag_type == WIRETYPE.VARINT:
                 data,pos = self.decode_varint(message,pos)
+            elif current_tag_type == WIRETYPE.FIXED_64:
+                data,pos = self.decode_fixed_64(message,pos)
+            elif current_tag_type == WIRETYPE.FIXED_32:
+                data,pos = self.decode_fixed_32(message,pos)
             else:
                 data = "ERR"
                 pos = len(message)
