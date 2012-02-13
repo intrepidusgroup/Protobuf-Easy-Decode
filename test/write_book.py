@@ -2,6 +2,7 @@
 
 import addressbook_pb2
 import sys
+import binascii
 
 # This function fills in a Person message based on user input.
 def PromptForAddress(person):
