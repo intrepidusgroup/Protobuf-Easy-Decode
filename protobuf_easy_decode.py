@@ -14,6 +14,7 @@ Author: Rajendra Umadas
 import sys
 import binascii
 import struct
+import pprint
 
 class WIRETYPE:
     
@@ -68,12 +69,7 @@ class ProtobufEasyDecode:
         new_pos = pos + length
         return buf[pos:new_pos],new_pos
     
-    def get_decoded_raw_message_deep(self):
-        if self.decoded_message_deep != {}:
-            return self.decoded_message_deep
-        self.decoded_message_deep = self.decode_raw_message(self.raw_message,True)
-        return self.decoded_message_deep
-    
+   
     def decode_raw_message(self,message, deep = False):
         alls_good = True
         pos = 0
@@ -86,6 +82,7 @@ class ProtobufEasyDecode:
             except:
                 current_tag_type= -1
                 pos = len(message)
+           #XXX: Need to catch exception for bad formats due to deep decode 
             if current_tag_type == WIRETYPE.LENGTHDELIM:
                 data,pos = self.decode_lengthdelim(message,pos)
                 if deep:
@@ -107,29 +104,28 @@ class ProtobufEasyDecode:
         return temp_proto
     
     def get_decoded_raw_message (self):
-        if self.decoded_message == {}:
-            self.decoded_message = self.decode_raw_message(self.raw_message)
+        if self.decoded_message != {}:
             return self.decoded_message
-        else:
-            return self.decoded_message
+        self.decoded_message = self.decode_raw_message(self.raw_message)
+        return self.decoded_message
+ 
+    def get_decoded_raw_message_deep(self):
+        if self.decoded_message_deep != {}:
+            return self.decoded_message_deep
+        self.decoded_message_deep = self.decode_raw_message(self.raw_message,True)
+        return self.decoded_message_deep
     
-    def decode_tag(self, tag_id):
-        if self.decoded_message == {}:
-            return
-        if not (tag_id in self.decoded_message):
-            return
-        if self.decoded_message[tag_id][0] == WIRETYPE.LENGTHDELIM:
-            self.decoded_message[tag_id] = \
-                 (WIRETYPE.LENGTHDELIM,
-                  self.decode_raw_message(self.decoded_message[tag_id][1]))
-        else:
-            return 
+    def pretty_print_decoded_message_deep(self):
+        pp = pprint.PrettyPrinter()
+        pp.pprint(self.decoded_message_deep)
+    
+    def pretty_print_decoded_message(self):
+        pp = pprint.PrettyPrinter()
+        pp.pprint(self.decoded_message)
 
 if __name__ == "__main__":
     x = ProtobufEasyDecode(binascii.unhexlify(sys.argv[1]))
-    x.get_decoded_raw_message()
-    
-    #x.decode_tag(3)
-    #x.decode_tag(5)
-    #x.decode_tag(10)
-    print x.get_decoded_raw_message_deep()
+    x.get_decoded_raw_message() 
+    x.get_decoded_raw_message_deep()
+    x.pretty_print_decoded_message_deep()
+    x.pretty_print_decoded_message()
