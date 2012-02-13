@@ -13,6 +13,7 @@ Author: Rajendra Umadas
 
 import sys
 import binascii
+import struct
 
 class WIRETYPE:
     
@@ -29,7 +30,19 @@ class ProtobufEasyDecode:
     def __init__(self,new_message):
         self.raw_message = new_message 
         self.decoded_message = {}
- 
+    
+    def decode_fixed_64(self, buf, pos):
+        newpos = pos + 8 
+        data = buf[pos:newpos]
+        data = struct.unpack('<Q',data)
+        return (data,newpos)    
+    
+    def decode_fixed_32(self, buf, pos):
+        newpos = pos + 4
+        data = buf[pos:newpos]
+        data = struct.unpack('<I',data)
+        return (data,newpos)
+
     def decode_varint(self,buf,pos):
     #pass in buffer and starting position
     #return the int and the ending pos
