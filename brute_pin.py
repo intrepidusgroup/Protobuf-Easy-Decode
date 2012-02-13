@@ -25,8 +25,6 @@ class data and the way protobuf is designed to serialize data.
 To decode specific parts of the Google Wallet proto buf encoded data
  it was required to understand the ".proto" for Google Wallet. " This 
 was derived by reverse engineering the Google Wallet application. 
-
-
 """
 
 TYPE_VARINT = 0

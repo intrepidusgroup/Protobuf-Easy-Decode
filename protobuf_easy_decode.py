@@ -7,6 +7,10 @@
 #I should be able to just use the protobuf code base to 
 #accomplise this task.
 
+"""
+Author: Rajendra Umadas
+"""
+
 import sys
 import binascii
 
