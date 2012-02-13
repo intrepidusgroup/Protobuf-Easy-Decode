@@ -30,6 +30,7 @@ class ProtobufEasyDecode:
     def __init__(self,new_message):
         self.raw_message = new_message 
         self.decoded_message = {}
+        self.decoded_message_deep = {}
     
     def decode_fixed_64(self, buf, pos):
         newpos = pos + 8 
@@ -66,17 +67,30 @@ class ProtobufEasyDecode:
         length,pos = self.decode_varint(buf,pos)
         new_pos = pos + length
         return buf[pos:new_pos],new_pos
-
-    def decode_raw_message(self,message):
+    
+    def get_decoded_raw_message_deep(self):
+        if self.decoded_message_deep != {}:
+            return self.decoded_message_deep
+        self.decoded_message_deep = self.decode_raw_message(self.raw_message,True)
+        return self.decoded_message_deep
+    
+    def decode_raw_message(self,message, deep = False):
         alls_good = True
         pos = 0
         temp_proto = {}
         while alls_good:
-            current_tag_header,pos=self.decode_varint(message,pos)
-            current_tag_id,current_tag_type = \
+            try:
+                current_tag_header,pos=self.decode_varint(message,pos)
+                current_tag_id,current_tag_type = \
                            self.decode_tag_header(current_tag_header)
+            except:
+                current_tag_type= -1
+                pos = len(message)
             if current_tag_type == WIRETYPE.LENGTHDELIM:
                 data,pos = self.decode_lengthdelim(message,pos)
+                if deep:
+                    old_data = data
+                    data = (old_data,self.decode_raw_message(data,True))
             elif current_tag_type == WIRETYPE.VARINT:
                 data,pos = self.decode_varint(message,pos)
             elif current_tag_type == WIRETYPE.FIXED_64:
@@ -114,7 +128,8 @@ class ProtobufEasyDecode:
 if __name__ == "__main__":
     x = ProtobufEasyDecode(binascii.unhexlify(sys.argv[1]))
     x.get_decoded_raw_message()
-    x.decode_tag(3)
-    x.decode_tag(5)
-    x.decode_tag(10)
-    print x.get_decoded_raw_message()
+    
+    #x.decode_tag(3)
+    #x.decode_tag(5)
+    #x.decode_tag(10)
+    print x.get_decoded_raw_message_deep()
