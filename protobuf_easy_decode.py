@@ -134,6 +134,4 @@ if __name__ == "__main__":
     x.get_decoded_raw_message() 
     x.get_decoded_raw_message_deep()
     x.pretty_print_decoded_message_deep()
-    x.pretty_print_decoded_message(
-
-)
+    x.pretty_print_decoded_message()
