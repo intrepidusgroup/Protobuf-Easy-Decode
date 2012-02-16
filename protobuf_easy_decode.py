@@ -5,7 +5,7 @@
 
 #Once I learn a bit more about the proto and the src base
 #I should be able to just use the protobuf code base to 
-#accomplise this task.
+#accomplish this task.
 
 """
 Author: Rajendra Umadas
@@ -23,7 +23,7 @@ class WIRETYPE:
     FIXED_64 = 1
     LENGTHDELIM = 2
     STARTGROUP = 3
-    ENDGROUp = 4
+    ENDGROUP = 4
     FIXED_32 = 5
 
 
