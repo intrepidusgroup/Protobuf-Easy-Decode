@@ -10,6 +10,8 @@
 """
 Author: Rajendra Umadas
 """
+#XXX: Just found out about repeated fields
+#XXX: This will fail. 
 
 import sys
 import binascii
@@ -141,6 +143,6 @@ class ProtobufEasyDecode:
 if __name__ == "__main__":
     x = ProtobufEasyDecode(binascii.unhexlify(sys.argv[1]))
     x.get_decoded_raw_message() 
-    #x.get_decoded_raw_message_deep()
-    #x.pretty_print_decoded_message_deep()
+    x.get_decoded_raw_message_deep()
+    x.pretty_print_decoded_message_deep()
     x.pretty_print_decoded_message()

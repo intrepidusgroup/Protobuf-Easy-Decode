@@ -44,6 +44,7 @@ address_book = addressbook_pb2.AddressBook()
 try:
   f = open(sys.argv[1], "rb")
   address_book.ParseFromString(f.read())
+  print address_book
   f.close()
 except IOError:
   print sys.argv[1] + ": Could not open file.  Creating a new one."
