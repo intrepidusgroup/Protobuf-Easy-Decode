@@ -115,7 +115,14 @@ class ProtobufEasyDecode:
                 data = "Err"
                 pos = len(message)
                 alls_good = False
-            temp_proto[current_tag_id] = (current_tag_type,data)
+            if current_tag_id in temp_proto:
+                temp_data = temp_proto[current_tag_id][1]
+                if type(temp_data) == list:
+                    temp_proto[current_tag_id][1].append(data)
+                else:
+                    temp_proto[current_tag_id]=(temp_proto[current_tag_id][0],[temp_data,data])
+            else:
+                temp_proto[current_tag_id] = (current_tag_type,data)
             if pos == len(message):
                 alls_good = False
         return temp_proto
