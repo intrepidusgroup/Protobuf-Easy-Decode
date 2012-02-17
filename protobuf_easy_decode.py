@@ -1,17 +1,9 @@
 #!/usr/bin/python
 
-#This will use a lot of code from the google protobuf project
-#to generate decoders for the most general of cases.
-
-#Once I learn a bit more about the proto and the src base
-#I should be able to just use the protobuf code base to 
-#accomplish this task.
-
 """
 Author: Rajendra Umadas
+
 """
-#XXX: Just found out about repeated fields
-#XXX: This will fail. 
 
 import sys
 import binascii
@@ -31,7 +23,7 @@ class WIRETYPE:
 
 class ProtobufEasyDecode:
 
-    GLOBAL_DEBUG = True
+    GLOBAL_DEBUG = False
 
     def __init__(self,new_message):
         self.raw_message = new_message 
@@ -90,7 +82,7 @@ class ProtobufEasyDecode:
             except:
                 #could not extract a correct tag header
                 if self.GLOBAL_DEBUG:
-                    print "Couldnt get tag header"
+                    print "Couldn't get tag header"
                 current_tag_type= -1
                 pos = len(message)
             try:
@@ -148,8 +140,19 @@ class ProtobufEasyDecode:
         pp.pprint(self.decoded_message)
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print 'Usage: %s "Hex Encoded Protobuf"' % sys.argv[0]
+        exit()
+
     x = ProtobufEasyDecode(binascii.unhexlify(sys.argv[1]))
     x.get_decoded_raw_message() 
     x.get_decoded_raw_message_deep()
+    print "Recursive Decoding"
+    print "*****"
     x.pretty_print_decoded_message_deep()
+    print "*****"
+    print ""
+    print "One Level Decoding"
+    print "*****"
     x.pretty_print_decoded_message()
+    print "*****"
